@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { getAllAnnonces, getCurrentUser, getUserAnnonces, createAnnonce, updateAnnonce, deleteAnnonce } from '../../api/api';
 import AnnonceList from '../AnnonceList/AnnonceList';
 import AnnonceForm from '../AnnonceForm/AnnonceForm';
+import './Accueil.css';
 
 const Accueil = () => {
     const [annonces, setAnnonces] = useState([]);
     const [userAnnonces, setUserAnnonces] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
     const [showForm, setShowForm] = useState(false);
-    const [message, setMessage] = useState('');
+    const [filterCategory, setFilterCategory] = useState('');
 
     useEffect(() => {
         fetchAnnonces();
@@ -90,10 +91,18 @@ const Accueil = () => {
         }
     };
 
+    const handleFilterChange = (e) => {
+        setFilterCategory(e.target.value);
+    };
+
+    const filteredAnnonces = annonces.filter(annonce => 
+        filterCategory === '' || annonce.category === filterCategory
+    );
+
     return (
-        <div>
+        <div className="accueil-container">
             <h1>Accueil</h1>
-                    <button onClick={() => setShowForm(!showForm)}>
+                    <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
                         {showForm ? "Annuler" : "Ajouter une annonce"}
                     </button>
                     {showForm && <AnnonceForm onSubmit={handleAddAnnonce} />}
@@ -102,7 +111,17 @@ const Accueil = () => {
 
               
             <h2>Toutes les annonces</h2>
-            <AnnonceList annonces={annonces} onUpdate={handleUpdateAnnonce} onDelete={handleDeleteAnnonce} />
+            <div className="filter-container">
+                <label htmlFor="category-filter">Filtrer par catégorie:</label>
+                <select id="category-filter" value={filterCategory} onChange={handleFilterChange}>
+                    <option value="">Toutes les catégories</option>
+                    <option value="Livres">Livres</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Électronique">Électronique</option>
+                    {/* Ajoutez d'autres options de catégorie ici */}
+                </select>
+            </div>
+            <AnnonceList annonces={filteredAnnonces} onUpdate={handleUpdateAnnonce} onDelete={handleDeleteAnnonce} />
          
         </div>
     );

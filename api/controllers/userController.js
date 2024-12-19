@@ -132,7 +132,6 @@ class UserController {
   }
 
   async getUserByToken(req, res) {
-    console.log(req.headers.authorization);
     try {
       const user = await userService.getUserByToken(req.headers.authorization.split(' ')[1]);
       successResponse(res, user);

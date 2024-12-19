@@ -26,7 +26,7 @@ export const getCurrentUser = () => api.get('/users/me');
 
 // Annonce API calls
 export const getAllAnnonces = () => api.get('/annonces');
-export const getUserAnnonces = (userId) => api.get(`/annonces/user/${userId}`);
+export const getUserAnnonces = (userId) => api.get(`/annonces/me'`);
 export const createAnnonce = (annonceData) => api.post('/annonces/create', annonceData);
 export const updateAnnonce = (id, annonceData) => api.put(`/annonces/${id}`, annonceData);
 export const deleteAnnonce = (id) => api.delete(`/annonces/${id}`);

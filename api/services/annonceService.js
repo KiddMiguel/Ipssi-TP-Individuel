@@ -27,12 +27,18 @@ class AnnonceService {
         return await Annonce.find({ user: userId });
     }
 
-    async getUserAnnonces(userId) {
-        const user = await User.findById(userId);
-        if (!user) return null;
-        return await user.getAnnonces();
-    }   
-
+    async getUserAnnoncesByToken(token) {
+        try {
+            const decoded = jwt.verify(token, jwtSecret);
+            const user = await User.findById(decoded.id);
+            if (!user || user.deleted_at) {
+                throw new Error('User not found or inactive');
+            }
+            return await Annonce.find({ user: user._id });
+        } catch (error) {
+            throw new Error('Invalid token');
+        }
+    }
 }
 
 module.exports = new AnnonceService();

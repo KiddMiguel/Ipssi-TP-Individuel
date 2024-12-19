@@ -7,7 +7,7 @@ router.post('/create',authMiddleware, annonceController.createAnnonce);
 router.get('/:id',authMiddleware, annonceController.getAnnonceById);
 router.put('/:id', authMiddleware, annonceController.updateAnnonce);
 router.delete('/:id',authMiddleware,  annonceController.deleteAnnonce);
-router.get('/:id/annonces', authMiddleware, annonceController.getUserAnnonces);
+router.get('/annonces/me', authMiddleware, annonceController.getUserAnnoncesByToken);
 
 // ----------------- ANNONCES ROUTES ----------------- //
 router.get('/', annonceController.getAllAnnonces);

@@ -79,9 +79,9 @@ class AnnonceController {
         }
     }
 
-    async getUserAnnonces(req, res) {
+    async getUserAnnoncesByToken(req, res) {
         try {
-            const annonces = await annonceService.getUserAnnonces(req.params.id);
+            const annonces = await annonceService.getUserAnnoncesByToken(req.headers.authorization.split(' ')[1]);
             successResponse(res, annonces);
         } catch (err) {
             errorResponse(res, err.message);

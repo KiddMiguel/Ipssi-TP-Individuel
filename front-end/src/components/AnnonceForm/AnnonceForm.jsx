@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './AnnonceForm.css';
 
 const AnnonceForm = ({ onSubmit }) => {
     const [formData, setFormData] = useState({
@@ -27,12 +28,12 @@ const AnnonceForm = ({ onSubmit }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="annonce-form" onSubmit={handleSubmit}>
             <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Titre" required />
             <input type="text" name="description" value={formData.description} onChange={handleChange} placeholder="Description" required />
             <input type="number" name="price" value={formData.price} onChange={handleChange} placeholder="Prix" required />
             <input type="text" name="category" value={formData.category} onChange={handleChange} placeholder="Catégorie" required />
-            <button type="submit">Ajouter</button>
+            <button className="btn-primary" type="submit">Ajouter</button>
         </form>
     );
 };
