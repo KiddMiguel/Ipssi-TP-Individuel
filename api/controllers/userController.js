@@ -35,15 +35,15 @@ class UserController {
 }
 
 
-  async getUserById(req, res) {
-    try {
-      const user = await userService.getUserById(req.params.id);
-      if (!user) return errorResponse(res, "User not found", 404);
-      successResponse(res, user);
-    } catch (err) {
-      errorResponse(res, err.message);
-    }
-  }
+  // async getUserById(req, res) {
+  //   try {
+  //     const user = await userService.getUserById(req.params.id);
+  //     if (!user) return errorResponse(res, "User not found", 404);
+  //     successResponse(res, user);
+  //   } catch (err) {
+  //     errorResponse(res, err.message);
+  //   }
+  // }
 
   async updateUser(req, res) {
     const { error } = validateUser(req.body);
@@ -73,6 +73,23 @@ class UserController {
   }
 
   // ----------------- USERS OPERATIONS ----------------- //
+  async register(req, res) {
+    try {
+      const { isValid, errors } = validateUser(req.body);
+
+      if (!isValid) {
+        const errorMessages = errors.map((err) => `${err.field}: ${err.message}`).join(", ");
+        return errorResponse(res, errorMessages, 400);
+      }
+
+      const user = await userService.createUser(req.body);
+      successResponse(res, user, "User created successfully");
+    } catch (err) {
+      errorResponse(res, err.message);
+    }
+  }
+
+
   async login(req, res) {
     try {
         const { isValid, errors } = validateUser(req.body, "login");
@@ -114,6 +131,17 @@ class UserController {
     }
   }
 
+  async getUserByToken(req, res) {
+    console.log(req.headers.authorization);
+    try {
+      const user = await userService.getUserByToken(req.headers.authorization.split(' ')[1]);
+      successResponse(res, user);
+    } catch (err) {
+      errorResponse(res, err.message);
+    }
+  }
+
+
   // ----------------- ADMIN OPERATIONS ----------------- //
 
   async getAllUsers(req, res) {
@@ -124,6 +152,8 @@ class UserController {
       errorResponse(res, err.message);
     }
   }
+
+
 }
 
 module.exports = new UserController();

@@ -9,17 +9,49 @@ class UserService {
             for (let user of data) {
                 user.password = await hashPassword(user.password);
             }
-            return await User.insertMany(data);
+            const users = await User.insertMany(data);
+            return users.map(user => {
+                const token = jwt.sign(
+                    {
+                        id: user._id,
+                        email: user.email,
+                        role: user.role
+                    },
+                    jwtSecret,
+                    { expiresIn: jwtExpiresIn }
+                );
+                return { user, token };
+            });
         } else {
             data.password = await hashPassword(data.password);
             const user = new User(data);
-            return await user.save();
+            await user.save();
+            const token = jwt.sign(
+                {
+                    id: user._id,
+                    email: user.email,
+                    role: user.role
+                },
+                jwtSecret,
+                { expiresIn: jwtExpiresIn }
+            );
+            return { user, token };
         }
     }
 
-    async getUserById(id) {
-        return await User.findById(id);
+    async getUserByToken(token) {
+        try {
+            const decoded = jwt.verify(token, jwtSecret);
+            const user = await User.findById(decoded.id);
+            if (!user || user.deleted_at) {
+                throw new Error('User not found or inactive');
+            }
+            return user;
+        } catch (error) {
+            throw new Error('Invalid token');
+        }
     }
+    
 
     async updateUser(id, data) {
         return await User.findByIdAndUpdate(id, data, { new: true });

@@ -7,13 +7,13 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
+    unique: [true, "Ce mail est déjà utilisé, connectez-vous !"],
     match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   password: { type: String, required: true },
   phone_number: {
     type: String,
-    unique: true,
+    unique: [true, "Ce numéro de téléphone est déjà utilisé."],
     sparse: true,
     match: /^\+?[0-9]{7,15}$/,
   },

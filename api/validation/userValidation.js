@@ -22,13 +22,11 @@ const userSchema = Joi.object({
         'any.required': 'L\'adresse e-mail est obligatoire.'
     }),
     password: Joi.string()
-        .min(8)
-        .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$'))
+        .min(6)
         .required()
         .messages({
             'string.empty': 'Le mot de passe est obligatoire.',
-            'string.min': 'Le mot de passe doit comporter au moins 8 caractères.',
-            'string.pattern.base': 'Le mot de passe doit inclure au moins une majuscule, une minuscule, un chiffre et un caractère spécial.',
+            'string.min': 'Le mot de passe doit comporter au moins 6 caractères.',
             'any.required': 'Le mot de passe est obligatoire.'
         }),
     phone_number: Joi.string().pattern(/^\+?[0-9]{7,15}$/).messages({
